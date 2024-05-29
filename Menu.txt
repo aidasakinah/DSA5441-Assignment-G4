@@ -1,23 +1,27 @@
-Nasi_Lemak_with_Fried_Chicken 8.50
-Curry_Mee 7.00
-Fried_Rice 7.00
-Mee_Soup 6.00
-Asam_Laksa 8.00
-Prawn_Mee 6.50
-Teh(hot) 2.00
-Teh(cold) 2.50
-Coffee(hot) 2.30
-Coffee(cold) 2.80
-Milo(hot) 3.00
-Milo(cold) 3.50
-Lemon_Tea(hot) 3.00
-Lemon_Tea(cold) 3.50
-Nasi_Goreng 7.80
-Tomyam 6.00
-Tomyam_kung 7.59
-Tomyam_udang 5.60
-Sup_kentang 3.40
-Lime_soda 2.30
-Limau_kasturi 1.60
-Buttermilk_chicken 12.00
-Teh_ais 2.00
+Nasi_Lemak_with_Fried_Chicken 8.50 FOOD
+Curry_Mee 7.00 FOOD
+Fried_Rice 7.00 FOOD
+Mee_Soup 6.00 FOOD
+Asam_Laksa 8.00 FOOD
+Prawn_Mee 6.50 FOOD
+Teh(hot) 2.00 BEVERAGE 
+Teh(cold) 2.50 BEVERAGE
+Coffee(hot) 2.30 BEVERAGE
+Coffee(cold) 2.80 BEVERAGE
+Milo(hot) 3.00 BEVERAGE
+Milo(cold) 3.50 BEVERAGE
+Lemon_Tea(hot) 3.00 BEVERAGE
+Lemon_Tea(cold) 3.50 BEVERAGE
+Nasi_Goreng 7.80 FOOD
+Tomyam 6.00 FOOD
+Tomyam_kung 7.59 FOOD
+Tomyam_udang 5.60 FOOD
+Sup_kentang 3.40 FOOD
+Lime_soda 2.30 BEVERAGE
+Limau_kasturi 1.60 BEVERAGE
+Buttermilk_chicken 12.00 FOOD
+Teh_ais 2.00 BEVERAGE
+
+
+Fish&Chip 15.00 FOOD
+yuhan 88.00 FOOD
