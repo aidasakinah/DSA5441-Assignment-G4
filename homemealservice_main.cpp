@@ -289,9 +289,12 @@ void showMenuOptions(Node *&head)
         cin >> displayChoice;
 
         if (displayChoice == 1)
-        {   
+        {
             system("cls");
             fflush(stdin);
+            cout << "----------------------------------------" << endl;
+            cout << "          Entering new item         " << endl;
+            cout << "----------------------------------------" << endl;
             cout << "Enter the name of the new item : ";
             getline(cin, itemName);
 
@@ -370,6 +373,7 @@ void showMenuOptions(Node *&head)
     case 3:
 
         fflush(stdin);
+        cout << "Entering new item";
         cout << "Enter the name of the new item : ";
         getline(cin, itemName);
 
