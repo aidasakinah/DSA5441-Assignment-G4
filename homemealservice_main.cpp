@@ -253,7 +253,7 @@ public:
 void showMenuOptions(Node *&head)
 {
     int choice;
-    string itemName, line, itemCategory;
+    string itemName, line, itemCategory, itemToDelete;
     float itemPrice;
     fstream menuFile;
     system("cls");
@@ -277,13 +277,79 @@ void showMenuOptions(Node *&head)
     switch (choice)
     {
     case 1:
-    {
-        printMenu(head);
-        goBackToMenu(head);
+
+        int displayChoice;
+        system("cls");
+        cout << "----------------------------------------" << endl;
+        cout << "          Unsorted Menu Options         " << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "1. Add Item" << endl;
+        cout << "2. View Menu" << endl;
+        cout << "\nEnter your choice : ";
+        cin >> displayChoice;
+
+        if (displayChoice == 1)
+        {   
+            system("cls");
+            fflush(stdin);
+            cout << "Enter the name of the new item : ";
+            getline(cin, itemName);
+
+            cout << "Enter the price of the new item : RM ";
+            cin >> itemPrice;
+
+            cout << "Enter the category of the new item : ";
+            cin.ignore();
+            getline(cin, itemCategory);
+
+            menuFile.open("Menu.txt", ios::in | ios::out | ios::app);
+            if (menuFile.is_open())
+            {
+                menuFile << itemName << " " << fixed << setprecision(2) << itemPrice << " " << itemCategory << endl;
+                cout << "Item added successfully.\n\n";
+                menuFile.close();
+
+                menuFile.open("Menu.txt", ios::in);
+                if (menuFile.is_open())
+                {
+                    vector<string> itemNames;
+                    vector<float> itemPrices;
+                    vector<string> itemCategories;
+                    string name, category;
+                    float price;
+
+                    while (menuFile >> name >> price >> category)
+                    {
+                        itemNames.push_back(name);
+                        itemPrices.push_back(price);
+                        itemCategories.push_back(category);
+                    }
+
+                    cout << "Updated Menu" << endl;
+                    for (int i = 0; i < itemNames.size(); i++)
+                    {
+                        cout << i + 1 << ") " << setw(30) << left << itemNames[i] << " RM" << fixed << setprecision(2) << itemPrices[i] << " (" << itemCategories[i] << ")" << endl;
+                    }
+                }
+
+                menuFile.close();
+                goBackToMenu(head);
+            }
+            else
+            {
+                cout << "Error opening Menu.txt for writing.\n";
+            }
+        } // end of else if 1
+        else if (displayChoice == 2)
+        {
+            system("cls");
+            printMenu(head);
+            goBackToMenu(head);
+        }
         break;
-    }
+
     case 2:
-    {
+
         int sortChoice;
         cout << "Sorted Menu Options:" << endl;
         cout << "1. Sort alphabetically" << endl;
@@ -300,8 +366,9 @@ void showMenuOptions(Node *&head)
             goBackToMenu(head);
         }
         break;
-    }
+
     case 3:
+
         fflush(stdin);
         cout << "Enter the name of the new item : ";
         getline(cin, itemName);
@@ -351,24 +418,28 @@ void showMenuOptions(Node *&head)
             cout << "Error opening Menu.txt for writing.\n";
         }
         break;
+
     case 4:
-    {
-        string itemToDelete;
+        fflush(stdin);
         cout << "Enter the name of the item to delete: ";
         getline(cin, itemToDelete);
         deleteMenuItem(head, itemToDelete);
         goBackToMenu(head); // This line is executed even if the item is not found
         break;
-    }
+
     case 5:
         cout << "Thank you for visiting Restaurant Fusion Fare Delights." << endl;
         exit(0);
+        break;
     default:
+
         system("cls");
-        cout << "Invalid choice. Please select again.\n"
-             << endl;
-    }
-}
+        cout << "Invalid choice. Please select again." << endl;
+        showMenuOptions(head);
+        break;
+
+    } // end of switch
+} // end function
 
 void goBackToMenu(Node *&head)
 {

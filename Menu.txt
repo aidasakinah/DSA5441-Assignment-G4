@@ -22,6 +22,7 @@ Limau_kasturi 1.60 BEVERAGE
 Buttermilk_chicken 12.00 FOOD
 Teh_ais 2.00 BEVERAGE
 
-
 Fish&Chip 15.00 FOOD
 yuhan 88.00 FOOD
+Teh O Ping 2.00 BEVERAGE
+Ais Kacang 2.30 BEVERAGE
