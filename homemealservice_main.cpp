@@ -4,9 +4,9 @@
 #include <cstdlib>
 #include <string>
 #include <algorithm>
-#include <conio.h>
 #include <vector>
 #include <sstream>
+#include <conio.h>
 
 using namespace std;
 const int MAX_ITEM = 100;
@@ -165,7 +165,66 @@ void printMenu(Node *head)
     }
 }
 
-// function declare
+// Ternary Search
+int ternarySearch(int l, int r, string key, vector<MenuItem> &items)
+{
+    if (r >= l)
+    {
+        int mid1 = l + (r - l) / 3;
+        int mid2 = r - (r - l) / 3;
+
+        if (items[mid1].name == key)
+        {
+            return mid1;
+        }
+        if (items[mid2].name == key)
+        {
+            return mid2;
+        }
+
+        if (key < items[mid1].name)
+        {
+            return ternarySearch(l, mid1 - 1, key, items);
+        }
+        else if (key > items[mid2].name)
+        {
+            return ternarySearch(mid2 + 1, r, key, items);
+        }
+        else
+        {
+            return ternarySearch(mid1 + 1, mid2 - 1, key, items);
+        }
+    }
+
+    return -1;
+}
+
+void searchMenu(Node *head, const string &itemName)
+{
+    vector<MenuItem> items;
+    Node *temp = head;
+
+    while (temp)
+    {
+        items.push_back(temp->data);
+        temp = temp->next;
+    }
+
+    sort(items.begin(), items.end(), [](MenuItem a, MenuItem b)
+         { return a.name < b.name; });
+
+    int index = ternarySearch(0, items.size() - 1, itemName, items);
+
+    if (index != -1)
+    {
+        cout << "Item found: " << items[index].name << " - RM" << fixed << setprecision(2) << items[index].price << " (" << items[index].category << ")" << endl;
+    }
+    else
+    {
+        cout << "Item not found in the menu." << endl;
+    }
+}
+
 void goBackToMenu(Node *&head);
 
 class Restaurant
@@ -368,6 +427,15 @@ void showMenuOptions(Node *&head)
             printMenu(head);
             goBackToMenu(head);
         }
+        else if (sortChoice == 3)
+        {
+            system("cls");
+            cout << "Enter the name of the item to search: ";
+            cin.ignore();
+            getline(cin, itemName);
+            searchMenu(head, itemName);
+            goBackToMenu(head);
+        }
         break;
 
     case 3:
@@ -477,3 +545,4 @@ int main()
 
     return 0;
 }
+
