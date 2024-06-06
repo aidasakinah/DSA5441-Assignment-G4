@@ -145,6 +145,62 @@ void radixSort(Node *&head)
     }
 }
 
+void countSortDescending(Node*& head, int pos) {
+    Node* temp = head;
+    vector<Node*> nodeList;
+
+    // Store all nodes in a vector
+    while (temp) {
+        nodeList.push_back(temp);
+        temp = temp->next;
+    }
+
+    // Sort the vector based on the character at the current position in descending order
+    sort(nodeList.begin(), nodeList.end(), [pos](Node* a, Node* b) {
+        if (pos >= a->data.name.length() && pos >= b->data.name.length()) {
+            return false;
+        }
+        else if (pos >= a->data.name.length()) {
+            return false;
+        }
+        else if (pos >= b->data.name.length()) {
+            return true;
+        }
+        else {
+            return a->data.name[pos] > b->data.name[pos];
+        }
+    });
+
+    // Rebuild the linked list from the sorted vector
+    Node* newHead = nullptr;
+    Node* tail = nullptr;
+    for (Node* node : nodeList) {
+        node->next = nullptr;
+        if (newHead == nullptr) {
+            newHead = node;
+        }
+        else {
+            tail->next = node;
+        }
+        tail = node;
+    }
+
+    head = newHead;
+}
+
+void radixSortDescending(Node*& head) {
+    int maxLen = 0;
+    Node* temp = head;
+    while (temp) {
+        maxLen = max(maxLen, static_cast<int>(temp->data.name.length()));
+        temp = temp->next;
+    }
+
+    for (int pos = maxLen - 1; pos >= 0; pos--) {
+        countSortDescending(head, pos);
+    }
+}
+
 void printMenu(Node *head)
 {
     if (head == nullptr)
@@ -378,82 +434,80 @@ void showMenuOptions(Node *&head)
     cout << "5. EXIT" << endl;
     cout << "\nEnter your choice :";
     cin >> choice;
-    cout << endl;
-
     cin.ignore();
+    cout << endl;
 
     Node *temp = nullptr;
     int i = 1;
 
     switch (choice)
     {
-    case 1:
+case 1:
+    int displayChoice;
+    system("cls");
+    cout << "----------------------------------------" << endl;
+    cout << "          Unsorted Menu Options         " << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "1. Add Item" << endl;
+    cout << "2. View Menu" << endl;
+    cout << "\nEnter your choice : ";
+    cin >> displayChoice;
 
-        int displayChoice;
+    if (displayChoice == 1)
+    {
         system("cls");
+        fflush(stdin);
         cout << "----------------------------------------" << endl;
-        cout << "          Unsorted Menu Options         " << endl;
+        cout << "          Entering new item         " << endl;
         cout << "----------------------------------------" << endl;
-        cout << "1. Add Item" << endl;
-        cout << "2. View Menu" << endl;
-        cout << "\nEnter your choice : ";
-        cin >> displayChoice;
+        fflush(stdin);
+        cout << "Enter the name of the new item : ";
+        getline(cin, itemName);
 
-        if (displayChoice == 1)
+        cout << "Enter the price of the new item : RM ";
+        cin >> itemPrice;
+
+        cout << "Enter the category of the new item : ";
+        cin.ignore();
+        getline(cin, itemCategory);
+
+        // Open the menu file for appending
+        menuFile.open("Menu.txt", ios::in | ios::out | ios::app);
+        if (menuFile.is_open())
         {
-            system("cls");
-            fflush(stdin);
-            cout << "----------------------------------------" << endl;
-            cout << "          Entering new item         " << endl;
-            cout << "----------------------------------------" << endl;
-            fflush(stdin);
-            cout << "Enter the name of the new item : ";
-            getline(cin, itemName);
+            // Write the new item to the file
+            menuFile << itemName << " " << fixed << setprecision(2) << itemPrice << " " << itemCategory << endl;
+            cout << "Item added successfully.\n\n";
+            menuFile.close();
 
-            cout << "Enter the price of the new item : RM ";
-            cin >> itemPrice;
+            // Update the linked list with the new item
+            insertMenuItem(head, MenuItem(itemName, itemPrice, itemCategory));
 
-            cout << "Enter the category of the new item : ";
-            cin.ignore();
-            getline(cin, itemCategory);
-
-            // Open the menu file for appending
-            menuFile.open("Menu.txt", ios::in | ios::out | ios::app);
-            if (menuFile.is_open())
-            {
-                // Write the new item to the file
-                menuFile << itemName << " " << fixed << setprecision(2) << itemPrice << " " << itemCategory << endl;
-                cout << "Item added successfully.\n\n";
-                menuFile.close();
-
-                // Update the linked list with the new item
-                insertMenuItem(head, MenuItem(itemName, itemPrice, itemCategory));
-
-                // Display the updated menu
-                printMenu(head);
-                goBackToMenu(head);
-            }
-            else
-            {
-                cout << "Error opening Menu.txt for writing.\n";
-            }
-
-        } // end of else if 1
-        else if (displayChoice == 2)
-        {
-            system("cls");
+            // Display the updated menu
             printMenu(head);
             goBackToMenu(head);
         }
-        break;
+        else
+        {
+            cout << "Error opening Menu.txt for writing.\n";
+        }
+    } // end of else if 1
+    else if (displayChoice == 2)
+    {
+        system("cls");
+        printMenu(head);
+        goBackToMenu(head);
+    }
+    break;
 
     case 2:
 
         int sortChoice;
         cout << "Sorted Menu Options:" << endl;
         cout << "1. Sort alphabetically" << endl;
-        cout << "2. Sort by price (lowest to highest)" << endl;
-        cout << "3. Search" << endl;
+        cout << "2. Sort alphabetically (Z-A)" << endl;
+        cout << "3. Sort by price (lowest to highest)" << endl;
+        cout << "4. Search" << endl;
         cout << "Enter your choice: ";
         cin >> sortChoice;
 
@@ -464,7 +518,13 @@ void showMenuOptions(Node *&head)
             printMenu(head);
             goBackToMenu(head);
         }
-        else if (sortChoice == 3)
+        else if (sortChoice == 2) { 
+        system("cls");
+        radixSortDescending(head); 
+        printMenu(head);
+        goBackToMenu(head);
+    }
+        else if (sortChoice == 4)
         {
             int searchType;
             system("cls");
@@ -483,7 +543,7 @@ void showMenuOptions(Node *&head)
         }
         break;
 
-    case 3:
+ case 3:
 
         fflush(stdin);
         cout << "Entering new item";
