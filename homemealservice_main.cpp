@@ -399,7 +399,6 @@ void bucketSortDescending(Node *&head)
 
     // Update the head pointer
     head = newHead;
-
 }
 
 void printMenu(Node *head)
@@ -578,8 +577,8 @@ void addMenuItem(Node *&head)
     }
 }
 
-//menu sorting algorithm 
-//finished
+// menu sorting algorithm
+// finished
 void algorithmSortMenu(Node *&head)
 {
     int sortalgo, radixChoice, bucketChoice;
@@ -770,8 +769,7 @@ void showMenuOptions(Node *&head)
     cout << "1. Unsorted Menu" << endl;
     cout << "2. Sorted Menu" << endl;
     cout << "3. Add Menu" << endl;
-    cout << "4. Delete" << endl;
-    cout << "5. EXIT" << endl;
+    cout << "4. EXIT" << endl;
     cout << "\nEnter your choice :";
     cin >> choice;
     cin.ignore();
@@ -827,7 +825,9 @@ void showMenuOptions(Node *&head)
         {
             int searchType;
             system("cls");
-            cout << "Search Options:" << endl;
+            cout << "----------------------------------------" << endl;
+            cout << "           Search Menu Options          " << endl;
+            cout << "----------------------------------------" << endl;
             cout << "1. Ternary Search" << endl;
             cout << "2. Jump Search" << endl;
             cout << "Enter your choice: ";
@@ -843,23 +843,15 @@ void showMenuOptions(Node *&head)
         break;
 
     case 3:
-        addMenuItem(head);
+        showMenuOptions(head);
         break;
 
     case 4:
-        fflush(stdin);
-        cout << "Enter the name of the item to delete: ";
-        getline(cin, itemToDelete);
-        deleteMenuItem(head, itemToDelete);
-        goBackToMenu(head); // This line is executed even if the item is not found
-        break;
-
-    case 5:
         cout << "Thank you for visiting Restaurant Fusion Fare Delights." << endl;
         exit(0);
         break;
-    default:
 
+    default:
         system("cls");
         cout << "Invalid choice. Please select again." << endl;
         showMenuOptions(head);
@@ -880,7 +872,7 @@ void goBackToMenu(Node *&head)
     {
         algorithmSortMenu(head);
     }
-    
+
     else
     {
         cout << "Invalid choice. Please select again." << endl;
