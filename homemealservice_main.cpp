@@ -453,20 +453,35 @@ void ternarySearch(Node *head, const string &key)
         temp = temp->next;
     }
 
-    // Sort the array alphabetically
-    sort(dummy, dummy + count, [](Node *a, Node *b)
-         { return a->data.name < b->data.name; });
-
-    // Perform ternary search on the array
-    bool found = false;
-    for (int i = 0; i < count; i++)
+    // Display unsorted search results
+    cout << "\nUnsorted Search Results:" << endl;
+    bool foundUnsorted = false;
+    for (int i = 0; i < count; ++i)
     {
         string itemName = toLowerCase(dummy[i]->data.name);
         if (itemName.find(lowerKey) != string::npos)
         {
             cout << dummy[i]->data.name << " - RM" << fixed << setprecision(2) << dummy[i]->data.price << " (" << dummy[i]->data.category << ")" << endl;
+            foundUnsorted = true;
+        }
+    }
+
+    // Sort the menu items in ascending order using bucket sort
+    bucketSortAscending(head);
+
+    // Display sorted search results
+    cout << "\nSorted Search Results by Price:" << endl;
+    temp = head;
+    bool found = false;
+    while (temp)
+    {
+        string itemName = toLowerCase(temp->data.name);
+        if (itemName.find(lowerKey) != string::npos)
+        {
+            cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
             found = true;
         }
+        temp = temp->next;
     }
 
     if (!found)
@@ -517,16 +532,20 @@ void jumpSearch(Node *head, const string &key)
     }
 }
 
-void searchMenu(Node *head, const string &itemName, int searchType)
+void searchResults(Node *head, const string &itemName, int searchType)
 {
     if (searchType == 1)
     {
-        cout << "Ternary Search Results:" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "         Ternary Search Results         " << endl;
+        cout << "----------------------------------------" << endl;
         ternarySearch(head, itemName);
     }
     else if (searchType == 2)
     {
-        cout << "Jump Search Results:" << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "           Jump Search Results          " << endl;
+        cout << "----------------------------------------" << endl;
         jumpSearch(head, itemName);
     }
 }
@@ -673,6 +692,50 @@ void algorithmSortMenu(Node *&head)
     }
 }
 
+//menu search algorithm
+void algorithmSearchMenu(Node *&head)
+{
+    int searchType;
+    system("cls");
+    cout << "----------------------------------------" << endl;
+    cout << "            Search Algorithms           " << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "1. Ternary Search" << endl;
+    cout << "2. Jump Search" << endl;
+    cout << "3. Return to homepage" << endl;
+    cout << "\nEnter your choice: ";
+    cin >> searchType;
+
+    if (searchType == 1)
+    {
+        system("cls");
+        cout << "Enter the name of the item to search: ";
+        string itemName;
+        cin.ignore();
+        getline(cin, itemName);
+        searchResults(head, itemName, searchType);
+        goBackToMenu(head);
+    }
+    else if (searchType == 2)
+    {
+        system("cls");
+        cout << "Enter the name of the item to search: ";
+        string itemName;
+        cin.ignore();
+        getline(cin, itemName);
+        searchResults(head, itemName, searchType);
+        goBackToMenu(head);
+    }
+    else if (searchType == 3)
+    {
+        showMenuOptions(head);
+    }
+    else
+    {
+        cout << "Invalid choice. Please select again." << endl;
+        algorithmSearchMenu(head);
+    }
+}
 class Restaurant
 {
 private:
@@ -823,22 +886,7 @@ void showMenuOptions(Node *&head)
         }
         else if (sortMenuChoice == 2)
         {
-            int searchType;
-            system("cls");
-            cout << "----------------------------------------" << endl;
-            cout << "           Search Menu Options          " << endl;
-            cout << "----------------------------------------" << endl;
-            cout << "1. Ternary Search" << endl;
-            cout << "2. Jump Search" << endl;
-            cout << "Enter your choice: ";
-            cin >> searchType;
-
-            system("cls");
-            cout << "Enter the name of the item to search: ";
-            cin.ignore();
-            getline(cin, itemName);
-            searchMenu(head, itemName, searchType);
-            goBackToMenu(head);
+            algorithmSearchMenu(head);
         }
         break;
 
@@ -872,7 +920,10 @@ void goBackToMenu(Node *&head)
     {
         algorithmSortMenu(head);
     }
-
+    else if (backChoice == 3)
+    {
+        algorithmSearchMenu(head);
+    }
     else
     {
         cout << "Invalid choice. Please select again." << endl;
