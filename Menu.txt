@@ -27,3 +27,4 @@ yuhan 88.00 FOOD
 Teh O Ping 2.00 BEVERAGE
 Ais Kacang 2.30 BEVERAGE
 Teh_O_Ping 2.00 BEVERAGE
+Milo_ping 10.00 FOOD

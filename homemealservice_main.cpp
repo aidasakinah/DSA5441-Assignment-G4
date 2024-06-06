@@ -406,6 +406,7 @@ void showMenuOptions(Node *&head)
             cout << "----------------------------------------" << endl;
             cout << "          Entering new item         " << endl;
             cout << "----------------------------------------" << endl;
+            fflush(stdin);
             cout << "Enter the name of the new item : ";
             getline(cin, itemName);
 
@@ -416,43 +417,27 @@ void showMenuOptions(Node *&head)
             cin.ignore();
             getline(cin, itemCategory);
 
+            // Open the menu file for appending
             menuFile.open("Menu.txt", ios::in | ios::out | ios::app);
             if (menuFile.is_open())
             {
+                // Write the new item to the file
                 menuFile << itemName << " " << fixed << setprecision(2) << itemPrice << " " << itemCategory << endl;
                 cout << "Item added successfully.\n\n";
                 menuFile.close();
 
-                menuFile.open("Menu.txt", ios::in);
-                if (menuFile.is_open())
-                {
-                    vector<string> itemNames;
-                    vector<float> itemPrices;
-                    vector<string> itemCategories;
-                    string name, category;
-                    float price;
+                // Update the linked list with the new item
+                insertMenuItem(head, MenuItem(itemName, itemPrice, itemCategory));
 
-                    while (menuFile >> name >> price >> category)
-                    {
-                        itemNames.push_back(name);
-                        itemPrices.push_back(price);
-                        itemCategories.push_back(category);
-                    }
-
-                    cout << "Updated Menu" << endl;
-                    for (int i = 0; i < itemNames.size(); i++)
-                    {
-                        cout << i + 1 << ") " << setw(30) << left << itemNames[i] << " RM" << fixed << setprecision(2) << itemPrices[i] << " (" << itemCategories[i] << ")" << endl;
-                    }
-                }
-
-                menuFile.close();
+                // Display the updated menu
+                printMenu(head);
                 goBackToMenu(head);
             }
             else
             {
                 cout << "Error opening Menu.txt for writing.\n";
             }
+
         } // end of else if 1
         else if (displayChoice == 2)
         {
