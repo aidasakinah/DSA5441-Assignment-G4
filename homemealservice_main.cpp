@@ -201,6 +201,74 @@ void radixSortDescending(Node*& head) {
     }
 }
 
+//bucket sort
+void bucketSort(Node *&head)
+{
+    if (!head)
+    {
+        cout << "The menu is empty. Nothing to sort." << endl;
+        return;
+    }
+
+    // Find the maximum price in the menu
+    float maxPrice = head->data.price;
+    Node *temp = head->next;
+    while (temp)
+    {
+        maxPrice = max(maxPrice, temp->data.price);
+        temp = temp->next;
+    }
+
+    // Create buckets based on the maximum price
+    int numBuckets = static_cast<int>(ceil(sqrt(maxPrice)));
+    vector<vector<Node *>> buckets(numBuckets);
+
+    // Distribute the menu items into the buckets based on their price
+    temp = head;
+    while (temp)
+    {
+        int bucketIndex = static_cast<int>(floor(temp->data.price / maxPrice * (numBuckets - 1)));
+        buckets[bucketIndex].push_back(temp);
+        temp = temp->next;
+    }
+
+    // Sort each bucket individually
+    for (int i = 0; i < numBuckets; i++)
+    {
+        sort(buckets[i].begin(), buckets[i].end(), [](Node *a, Node *b) {
+            return a->data.price < b->data.price;
+        });
+    }
+
+    // Rebuild the linked list from the sorted buckets
+    Node *newHead = nullptr;
+    Node *tail = nullptr;
+    for (int i = 0; i < numBuckets; i++)
+    {
+        for (Node *node : buckets[i])
+        {
+            if (!newHead)
+            {
+                newHead = node;
+                tail = node;
+            }
+            else
+            {
+                tail->next = node;
+                tail = node;
+            }
+        }
+    }
+
+    // Set the tail's next pointer to nullptr to mark the end of the list
+    tail->next = nullptr;
+
+    // Update the head pointer
+    head = newHead;
+
+    cout << "Menu sorted using bucket sort." << endl;
+}
+
 void printMenu(Node *head)
 {
     if (head == nullptr)
