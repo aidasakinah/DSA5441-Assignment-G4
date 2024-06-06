@@ -29,3 +29,5 @@ Teh_O_Ping 2.00 BEVERAGE
 Milo_ping 10.00 FOOD
 Teh_O_limau 10.00 BEVERAGE
 Mee_Goreng 2.50 FOOD
+tryagan 5.00 FOOD
+ 5.00 FOOD

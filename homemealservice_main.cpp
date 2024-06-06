@@ -403,6 +403,41 @@ void searchMenu(Node *head, const string &itemName, int searchType)
 
 void goBackToMenu(Node *&head);
 
+void addMenuItem(Node*& head) {
+    fflush(stdin);
+    cout << "Entering new item" << endl;
+    string itemName;
+    cout << "Enter the name of the new item : ";
+    getline(cin, itemName);
+
+    float itemPrice;
+    cout << "Enter the price of the new item : RM ";
+    cin >> itemPrice;
+
+    string itemCategory;
+    cout << "Enter the category of the new item : ";
+    cin.ignore();
+    getline(cin, itemCategory);
+
+    fstream menuFile("Menu.txt", ios::in | ios::out | ios::app);
+    if (menuFile.is_open()) {
+        menuFile << itemName << " " << fixed << setprecision(2) << itemPrice << " " << itemCategory << endl;
+        cout << "Item added successfully.\n\n";
+        menuFile.close();
+
+        // Update the linked list with the new item
+        insertMenuItem(head, MenuItem(itemName, itemPrice, itemCategory));
+
+        // Display the updated menu
+        printMenu(head);
+        goBackToMenu(head);
+    } else {
+        cout << "Error opening Menu.txt for writing.\n";
+    }
+}
+
+
+
 class Restaurant
 {
 private:
@@ -523,43 +558,8 @@ case 1:
 
     if (displayChoice == 1)
     {
-        system("cls");
-        fflush(stdin);
-        cout << "----------------------------------------" << endl;
-        cout << "          Entering new item         " << endl;
-        cout << "----------------------------------------" << endl;
-        fflush(stdin);
-        cout << "Enter the name of the new item : ";
-        getline(cin, itemName);
-
-        cout << "Enter the price of the new item : RM ";
-        cin >> itemPrice;
-
-        cout << "Enter the category of the new item : ";
-        cin.ignore();
-        getline(cin, itemCategory);
-
-        // Open the menu file for appending
-        menuFile.open("Menu.txt", ios::in | ios::out | ios::app);
-        if (menuFile.is_open())
-        {
-            // Write the new item to the file
-            menuFile << itemName << " " << fixed << setprecision(2) << itemPrice << " " << itemCategory << endl;
-            cout << "Item added successfully.\n\n";
-            menuFile.close();
-
-            // Update the linked list with the new item
-            insertMenuItem(head, MenuItem(itemName, itemPrice, itemCategory));
-
-            // Display the updated menu
-            printMenu(head);
-            goBackToMenu(head);
-        }
-        else
-        {
-            cout << "Error opening Menu.txt for writing.\n";
-        }
-    } // end of else if 1
+        addMenuItem(head); // Call the addMenuItem function
+    }
     else if (displayChoice == 2)
     {
         system("cls");
@@ -567,6 +567,7 @@ case 1:
         goBackToMenu(head);
     }
     break;
+
 
     case 2:
 
@@ -611,58 +612,9 @@ case 1:
         }
         break;
 
- case 3:
-
-        fflush(stdin);
-        cout << "Entering new item";
-        cout << "Enter the name of the new item : ";
-        getline(cin, itemName);
-
-        cout << "Enter the price of the new item : RM ";
-        cin >> itemPrice;
-
-        cout << "Enter the category of the new item : ";
-        cin.ignore();
-        getline(cin, itemCategory);
-
-        menuFile.open("Menu.txt", ios::in | ios::out | ios::app);
-        if (menuFile.is_open())
-        {
-            menuFile << itemName << " " << fixed << setprecision(2) << itemPrice << " " << itemCategory << endl;
-            cout << "Item added successfully.\n\n";
-            menuFile.close();
-
-            menuFile.open("Menu.txt", ios::in);
-            if (menuFile.is_open())
-            {
-                vector<string> itemNames;
-                vector<float> itemPrices;
-                vector<string> itemCategories;
-                string name, category;
-                float price;
-
-                while (menuFile >> name >> price >> category)
-                {
-                    itemNames.push_back(name);
-                    itemPrices.push_back(price);
-                    itemCategories.push_back(category);
-                }
-
-                cout << "Updated Menu" << endl;
-                for (int i = 0; i < itemNames.size(); i++)
-                {
-                    cout << i + 1 << ") " << setw(30) << left << itemNames[i] << " RM" << fixed << setprecision(2) << itemPrices[i] << " (" << itemCategories[i] << ")" << endl;
-                }
-            }
-
-            menuFile.close();
-            goBackToMenu(head);
-        }
-        else
-        {
-            cout << "Error opening Menu.txt for writing.\n";
-        }
-        break;
+    case 3:
+            addMenuItem(head);
+            break;
 
     case 4:
         fflush(stdin);
