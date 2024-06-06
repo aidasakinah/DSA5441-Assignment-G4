@@ -413,9 +413,9 @@ void printMenu(Node *head)
         return;
     }
 
-    cout << "----------------------------------------" << endl;
+    cout << string(65, '-') << endl;
     cout << setw(30) << "Menu" << endl;
-    cout << "----------------------------------------" << endl;
+    cout << string(65, '-') << endl;
     cout << left << setw(30) << "Name" << setw(15) << "Price (RM)" << setw(20) << "Category" << endl;
     cout << string(65, '-') << endl;
 
@@ -591,7 +591,7 @@ void algorithmSortMenu(Node *&head)
     cout << "2. Bucket Sort" << endl;
     cout << "3. View unsorted data" << endl;
     cout << "4. Return to previous page" << endl;
-    cout << "Enter your choice: ";
+    cout << "\nEnter your choice: ";
     cin >> sortalgo;
 
     if (sortalgo == 1)
@@ -603,7 +603,7 @@ void algorithmSortMenu(Node *&head)
         cout << "1. Alphabetically (A-Z)" << endl;
         cout << "2. Alphabetically (Z-A)" << endl;
         cout << "3. Return to previous page" << endl;
-        cout << "Enter your choice: ";
+        cout << "\nEnter your choice: ";
         cin >> radixChoice;
 
         if (radixChoice == 1)
@@ -634,7 +634,7 @@ void algorithmSortMenu(Node *&head)
         cout << "1. Price Range (Lowest-Highest)" << endl;
         cout << "2. Price Range (Highest to Lowest)" << endl;
         cout << "3. Return to previous page" << endl;
-        cout << "Enter your choice: ";
+        cout << "\nEnter your choice: ";
         cin >> bucketChoice;
 
         if (bucketChoice == 1)

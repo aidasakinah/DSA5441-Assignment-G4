@@ -31,3 +31,4 @@ tryagan 5.00 FOOD
 Ice_kapal 2.30 BEVERAGE
 Soya(ais) 2.40 BEVERAGE
 Milo_cincau 1.50 BEVERAGE
+Sirap_cincau 2.60 BEVERAGE
