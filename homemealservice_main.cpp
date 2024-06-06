@@ -7,6 +7,8 @@
 #include <vector>
 #include <sstream>
 #include <conio.h>
+#include <cmath>
+#include <cctype>
 
 using namespace std;
 const int MAX_ITEM = 100;
@@ -199,7 +201,41 @@ int ternarySearch(int l, int r, string key, vector<MenuItem> &items)
     return -1;
 }
 
-void searchMenu(Node *head, const string &itemName)
+// Utility function to convert a string to lowercase
+string toLowerCase(const string &str)
+{
+    string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
+
+// jump search
+vector<int> jumpSearch(const vector<MenuItem> &items, const string &key)
+{
+    vector<int> results;
+    int n = items.size();
+    int step = sqrt(n);
+    int prev = 0;
+    string lowerKey = toLowerCase(key);
+
+    while (prev < n)
+    {
+        // Check within the current block
+        for (int i = prev; i < min(step, n); i++)
+        {
+            if (toLowerCase(items[i].name).find(lowerKey) != string::npos)
+            {
+                results.push_back(i);
+            }
+        }
+        prev = step;
+        step += sqrt(n);
+    }
+
+    return results;
+}
+
+void searchMenu(Node *head, const string &itemName, int searchType)
 {
     vector<MenuItem> items;
     Node *temp = head;
@@ -213,11 +249,27 @@ void searchMenu(Node *head, const string &itemName)
     sort(items.begin(), items.end(), [](MenuItem a, MenuItem b)
          { return a.name < b.name; });
 
-    int index = ternarySearch(0, items.size() - 1, itemName, items);
-
-    if (index != -1)
+    vector<int> indices;
+    if (searchType == 1)
     {
-        cout << "Item found: " << items[index].name << " - RM" << fixed << setprecision(2) << items[index].price << " (" << items[index].category << ")" << endl;
+        int index = ternarySearch(0, items.size() - 1, itemName, items);
+        if (index != -1)
+        {
+            indices.push_back(index);
+        }
+    }
+    else if (searchType == 2)
+    {
+        indices = jumpSearch(items, itemName);
+    }
+
+    if (!indices.empty())
+    {
+        cout << "Items found: " << endl;
+        for (int index : indices)
+        {
+            cout << items[index].name << " - RM" << fixed << setprecision(2) << items[index].price << " (" << items[index].category << ")" << endl;
+        }
     }
     else
     {
@@ -429,11 +481,19 @@ void showMenuOptions(Node *&head)
         }
         else if (sortChoice == 3)
         {
+            int searchType;
+            system("cls");
+            cout << "Search Options:" << endl;
+            cout << "1. Ternary Search" << endl;
+            cout << "2. Jump Search" << endl;
+            cout << "Enter your choice: ";
+            cin >> searchType;
+
             system("cls");
             cout << "Enter the name of the item to search: ";
             cin.ignore();
             getline(cin, itemName);
-            searchMenu(head, itemName);
+            searchMenu(head, itemName, searchType);
             goBackToMenu(head);
         }
         break;
@@ -545,4 +605,3 @@ int main()
 
     return 0;
 }
-
