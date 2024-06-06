@@ -29,3 +29,5 @@ Teh_O_limau 10.00 BEVERAGE
 Mee_Goreng 2.50 FOOD
 tryagan 5.00 FOOD
 Ice_kapal 2.30 BEVERAGE
+Soya(ais) 2.40 BEVERAGE
+Milo_cincau 1.50 BEVERAGE
