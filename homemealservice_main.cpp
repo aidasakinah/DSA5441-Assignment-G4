@@ -306,8 +306,6 @@ void bucketSortAscending(Node *&head)
 
     // Update the head pointer
     head = newHead;
-
-    cout << "Menu sorted using bucket sort." << endl;
 }
 
 // Custom sorting algorithm: Find maximum and swap
@@ -402,7 +400,6 @@ void bucketSortDescending(Node *&head)
     // Update the head pointer
     head = newHead;
 
-    cout << "Menu sorted using bucket sort in descending order." << endl;
 }
 
 void printMenu(Node *head)
@@ -536,6 +533,7 @@ void searchMenu(Node *head, const string &itemName, int searchType)
 }
 
 void goBackToMenu(Node *&head);
+void showMenuOptions(Node *&head);
 
 void addMenuItem(Node *&head)
 {
@@ -580,6 +578,8 @@ void addMenuItem(Node *&head)
     }
 }
 
+//menu sorting algorithm 
+//finished
 void algorithmSortMenu(Node *&head)
 {
     int sortalgo, radixChoice, bucketChoice;
@@ -590,7 +590,7 @@ void algorithmSortMenu(Node *&head)
     cout << "1. Radix Sort" << endl;
     cout << "2. Bucket Sort" << endl;
     cout << "3. View unsorted data" << endl;
-    cout << "4. Return to previous page" << endl;
+    cout << "4. Return to homepage" << endl;
     cout << "\nEnter your choice: ";
     cin >> sortalgo;
 
@@ -612,6 +612,7 @@ void algorithmSortMenu(Node *&head)
             radixSort(head);
             printMenu(head);
             goBackToMenu(head);
+            algorithmSortMenu(head);
         }
         else if (radixChoice == 2)
         {
@@ -655,6 +656,21 @@ void algorithmSortMenu(Node *&head)
         {
             algorithmSortMenu(head);
         }
+    }
+    else if (sortalgo == 3)
+    {
+        system("cls");
+        printMenu(head);
+        goBackToMenu(head);
+    }
+    else if (sortalgo == 4)
+    {
+        showMenuOptions(head);
+    }
+    else
+    {
+        cout << "Invalid choice. Please select again." << endl;
+        algorithmSortMenu(head);
     }
 }
 
@@ -853,13 +869,18 @@ void showMenuOptions(Node *&head)
 
 void goBackToMenu(Node *&head)
 {
-    cout << "\nEnter 1 to go back to the homepage: ";
+    cout << "\nEnter 1 to go back to the homepage, 2 to Sorting Menu or 3 to Search Menu: ";
     int backChoice;
     cin >> backChoice;
     if (backChoice == 1)
     {
         showMenuOptions(head);
     }
+    else if (backChoice == 2)
+    {
+        algorithmSortMenu(head);
+    }
+    
     else
     {
         cout << "Invalid choice. Please select again." << endl;
