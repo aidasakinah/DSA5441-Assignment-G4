@@ -291,46 +291,49 @@ void printMenu(Node *head)
     }
 }
 
-// Ternary Search
-int ternarySearch(int l, int r, string key, vector<MenuItem> &items)
-{
-    if (r >= l)
-    {
-        int mid1 = l + (r - l) / 3;
-        int mid2 = r - (r - l) / 3;
-
-        if (items[mid1].name == key)
-        {
-            return mid1;
-        }
-        if (items[mid2].name == key)
-        {
-            return mid2;
-        }
-
-        if (key < items[mid1].name)
-        {
-            return ternarySearch(l, mid1 - 1, key, items);
-        }
-        else if (key > items[mid2].name)
-        {
-            return ternarySearch(mid2 + 1, r, key, items);
-        }
-        else
-        {
-            return ternarySearch(mid1 + 1, mid2 - 1, key, items);
-        }
-    }
-
-    return -1;
-}
-
 // Utility function to convert a string to lowercase
 string toLowerCase(const string &str)
 {
     string lowerStr = str;
     transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
     return lowerStr;
+}
+
+// Ternary Search
+vector<int> ternarySearch(int l, int r, string key, vector<MenuItem> &items)
+{
+    vector<int> results;
+    key = toLowerCase(key);
+
+    if (r < l)
+    {
+        return results;
+    }
+
+    int mid1 = l + (r - l) / 3;
+    int mid2 = r - (r - l) / 3;
+
+    // Check if the mid points contain the key
+    if (toLowerCase(items[mid1].name).find(key) != string::npos)
+    {
+        results.push_back(mid1);
+    }
+    if (toLowerCase(items[mid2].name).find(key) != string::npos)
+    {
+        results.push_back(mid2);
+    }
+
+    // Recursively search in all three parts of the array
+    vector<int> leftResults = ternarySearch(l, mid1 - 1, key, items);
+    vector<int> middleResults = ternarySearch(mid1 + 1, mid2 - 1, key, items);
+    vector<int> rightResults = ternarySearch(mid2 + 1, r, key, items);
+
+    // Combine all results
+    results.insert(results.end(), leftResults.begin(), leftResults.end());
+    results.insert(results.end(), middleResults.begin(), middleResults.end());
+    results.insert(results.end(), rightResults.begin(), rightResults.end());
+
+    return results;
 }
 
 // jump search
@@ -376,11 +379,7 @@ void searchMenu(Node *head, const string &itemName, int searchType)
     vector<int> indices;
     if (searchType == 1)
     {
-        int index = ternarySearch(0, items.size() - 1, itemName, items);
-        if (index != -1)
-        {
-            indices.push_back(index);
-        }
+        indices = ternarySearch(0, items.size() - 1, itemName, items);
     }
     else if (searchType == 2)
     {
