@@ -23,11 +23,10 @@ Buttermilk_chicken 12.00 FOOD
 Teh_ais 2.00 BEVERAGE
 Fish&Chip 15.00 FOOD
 yuhan 88.00 FOOD
-Teh O Ping 2.00 BEVERAGE
-Ais Kacang 2.30 BEVERAGE
 Teh_O_Ping 2.00 BEVERAGE
 Milo_ping 10.00 FOOD
 Teh_O_limau 10.00 BEVERAGE
 Mee_Goreng 2.50 FOOD
 tryagan 5.00 FOOD
  5.00 FOOD
+Ice_kapal 2.30 BEVERAGE

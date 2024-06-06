@@ -436,8 +436,6 @@ void addMenuItem(Node*& head) {
     }
 }
 
-
-
 class Restaurant
 {
 private:
