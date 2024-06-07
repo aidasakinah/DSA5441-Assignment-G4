@@ -494,7 +494,7 @@ void ternarySearch(Node *head, const string &key)
     }
 }
 
-// Jump Search
+/// Jump Search
 void jumpSearch(Node *head, const string &key)
 {
     if (!head)
@@ -533,34 +533,11 @@ void jumpSearch(Node *head, const string &key)
         return;
     }
 
-    // Sort the linked list using radix sort in ascending order
+    // Sort the linked list using radix sort
     radixSort(head);
 
-    // Display sorted search results in ascending order
-    cout << "\nSorted Search Results by Name (Ascending):" << endl;
-    temp = head;
-    found = false;
-    while (temp)
-    {
-        string itemName = toLowerCase(temp->data.name);
-        if (itemName.find(lowerKey) != string::npos)
-        {
-            cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
-            found = true;
-        }
-        temp = temp->next;
-    }
-
-    if (!found)
-    {
-        cout << "Item not found in the menu." << endl;
-    }
-
-    // Sort the linked list using radix sort in descending order
-    radixSortDescending(head);
-
-    // Display sorted search results in descending order
-    cout << "\nSorted Search Results by Name (Descending):" << endl;
+    // Display sorted search results
+    cout << "\nSorted Search Results by Name:" << endl;
     temp = head;
     found = false;
     while (temp)
@@ -579,8 +556,6 @@ void jumpSearch(Node *head, const string &key)
         cout << "Item not found in the menu." << endl;
     }
 }
-
-
 
 void searchResults(Node *head, const string &itemName, int searchType)
 {
