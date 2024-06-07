@@ -457,72 +457,40 @@ void ternarySearch(Node *head, const string &key)
         temp = temp->next;
     }
 
-    // Ternary search function for linked list nodes
-    auto ternarySearchRecursive = [&](int l, int r, const string &key, Node *items[], auto &ternarySearchRecursive) -> void
-    {
-        if (r < l)
-            return;
-
-        int mid1 = l + (r - l) / 3;
-        int mid2 = r - (r - l) / 3;
-
-        // Check if the mid points contain the key
-        if (toLowerCase(items[mid1]->data.name).find(key) != string::npos)
-        {
-            cout << items[mid1]->data.name << " - RM" << fixed << setprecision(2) << items[mid1]->data.price << " (" << items[mid1]->data.category << ")" << endl;
-        }
-        if (toLowerCase(items[mid2]->data.name).find(key) != string::npos)
-        {
-            cout << items[mid2]->data.name << " - RM" << fixed << setprecision(2) << items[mid2]->data.price << " (" << items[mid2]->data.category << ")" << endl;
-        }
-
-        // Recursively search in all three parts of the array
-        ternarySearchRecursive(l, mid1 - 1, key, items, ternarySearchRecursive);
-        ternarySearchRecursive(mid1 + 1, mid2 - 1, key, items, ternarySearchRecursive);
-        ternarySearchRecursive(mid2 + 1, r, key, items, ternarySearchRecursive);
-    };
-
     // Display unsorted search results
-    cout << "Unsorted Search Results:" << endl;
+    cout << "\nUnsorted Search Results:" << endl;
+    bool foundUnsorted = false;
     for (int i = 0; i < count; ++i)
     {
         string itemName = toLowerCase(dummy[i]->data.name);
         if (itemName.find(lowerKey) != string::npos)
         {
             cout << dummy[i]->data.name << " - RM" << fixed << setprecision(2) << dummy[i]->data.price << " (" << dummy[i]->data.category << ")" << endl;
+            foundUnsorted = true;
         }
     }
 
-    // Sort the linked list using radix sort in ascending order
-    radixSort(head);
+    // Sort the menu items in ascending order using bucket sort
+    bucketSortAscending(head);
 
     // Display sorted search results
-    cout << "\nSorted Search Results by Name (Ascending):" << endl;
+    cout << "\nSorted Search Results by Price:" << endl;
     temp = head;
+    bool found = false;
     while (temp)
     {
         string itemName = toLowerCase(temp->data.name);
         if (itemName.find(lowerKey) != string::npos)
         {
             cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
+            found = true;
         }
         temp = temp->next;
     }
 
-    // Sort the linked list using radix sort in descending order
-    radixSortDescending(head);
-
-    // Display sorted search results in descending order
-    cout << "\nSorted Search Results by Name (Descending):" << endl;
-    temp = head;
-    while (temp)
+    if (!found)
     {
-        string itemName = toLowerCase(temp->data.name);
-        if (itemName.find(lowerKey) != string::npos)
-        {
-            cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
-        }
-        temp = temp->next;
+        cout << "Item not found in the menu." << endl;
     }
 }
 
