@@ -130,6 +130,7 @@ void countSort(Node *&head, int pos)
     head = newHead;
 }
 
+// alphabetically ascending
 void radixSort(Node *&head)
 {
     int maxLen = 0;
@@ -195,6 +196,7 @@ void countSortDescending(Node *&head, int pos)
     head = newHead;
 }
 
+// aplhabetic descending
 void radixSortDescending(Node *&head)
 {
     int maxLen = 0;
@@ -401,6 +403,7 @@ void bucketSortDescending(Node *&head)
     head = newHead;
 }
 
+// to print menu from txt file
 void printMenu(Node *head)
 {
     if (head == nullptr)
@@ -510,25 +513,46 @@ void jumpSearch(Node *head, const string &key)
         temp = temp->next;
     }
 
-    // Sort the array alphabetically
-    sort(dummy, dummy + count, [](Node *a, Node *b)
-         { return a->data.name < b->data.name; });
-
-    int step = sqrt(count);
-    int prev = 0;
-
-    // Perform jump search on the array
-    while (prev < count)
+    // Display unsorted search results
+    cout << "Unsorted Search Results:" << endl;
+    bool found = false;
+    for (int i = 0; i < count; ++i)
     {
-        for (int i = prev; i < min(step, count); i++)
+        string itemName = toLowerCase(dummy[i]->data.name);
+        if (itemName.find(lowerKey) != string::npos)
         {
-            if (toLowerCase(dummy[i]->data.name).find(lowerKey) != string::npos)
-            {
-                cout << dummy[i]->data.name << " - RM" << fixed << setprecision(2) << dummy[i]->data.price << " (" << dummy[i]->data.category << ")" << endl;
-            }
+            cout << dummy[i]->data.name << " - RM" << fixed << setprecision(2) << dummy[i]->data.price << " (" << dummy[i]->data.category << ")" << endl;
+            found = true;
         }
-        prev = step;
-        step += sqrt(count);
+    }
+
+    if (!found)
+    {
+        cout << "Item not found in the menu." << endl;
+        return;
+    }
+
+    // Sort the linked list using radix sort
+    radixSort(head);
+
+    // Display sorted search results
+    cout << "\nSorted Search Results by Name:" << endl;
+    temp = head;
+    found = false;
+    while (temp)
+    {
+        string itemName = toLowerCase(temp->data.name);
+        if (itemName.find(lowerKey) != string::npos)
+        {
+            cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
+            found = true;
+        }
+        temp = temp->next;
+    }
+
+    if (!found)
+    {
+        cout << "Item not found in the menu." << endl;
     }
 }
 
@@ -692,7 +716,7 @@ void algorithmSortMenu(Node *&head)
     }
 }
 
-//menu search algorithm
+// menu search algorithm
 void algorithmSearchMenu(Node *&head)
 {
     int searchType;
