@@ -196,7 +196,6 @@ void countSortDescending(Node *&head, int pos)
     head = newHead;
 }
 
-
 // aplhabetic descending
 void radixSortDescending(Node *&head)
 {
@@ -446,49 +445,70 @@ void ternarySearch(Node *head, const string &key)
     // Convert key to lowercase
     string lowerKey = toLowerCase(key);
 
-    // Create a dummy array to hold the nodes
-    Node *dummy[MAX_ITEM];
-    int count = 0;
-
-    Node *temp = head;
-    while (temp)
-    {
-        dummy[count++] = temp;
-        temp = temp->next;
-    }
-
     // Display unsorted search results
-    cout << "\nUnsorted Search Results:" << endl;
+    cout << "Unsorted Search Results:" << endl;
     bool foundUnsorted = false;
-    for (int i = 0; i < count; ++i)
-    {
-        string itemName = toLowerCase(dummy[i]->data.name);
-        if (itemName.find(lowerKey) != string::npos)
-        {
-            cout << dummy[i]->data.name << " - RM" << fixed << setprecision(2) << dummy[i]->data.price << " (" << dummy[i]->data.category << ")" << endl;
-            foundUnsorted = true;
-        }
-    }
-
-    // Sort the menu items in ascending order using bucket sort
-    bucketSortAscending(head);
-
-    // Display sorted search results
-    cout << "\nSorted Search Results by Price:" << endl;
-    temp = head;
-    bool found = false;
+    Node *temp = head;
     while (temp)
     {
         string itemName = toLowerCase(temp->data.name);
         if (itemName.find(lowerKey) != string::npos)
         {
             cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
-            found = true;
+            foundUnsorted = true;
         }
         temp = temp->next;
     }
 
-    if (!found)
+    if (!foundUnsorted)
+    {
+        cout << "Item not found in the menu." << endl;
+        return;
+    }
+
+    // Sort the linked list in ascending order using bucket sort
+    bucketSortAscending(head);
+
+    // Display sorted search results in ascending order
+    cout << "\nSorted Search Results by Price (Ascending):" << endl;
+    bool foundSortedAscending = false;
+    temp = head;
+    while (temp)
+    {
+        string itemName = toLowerCase(temp->data.name);
+        if (itemName.find(lowerKey) != string::npos)
+        {
+            cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
+            foundSortedAscending = true;
+        }
+        temp = temp->next;
+    }
+
+    if (!foundSortedAscending)
+    {
+        cout << "Item not found in the menu." << endl;
+        return;
+    }
+
+    // Sort the linked list in descending order using bucket sort
+    bucketSortDescending(head);
+
+    // Display sorted search results in descending order
+    cout << "\nSorted Search Results by Price (Descending):" << endl;
+    bool foundSortedDescending = false;
+    temp = head;
+    while (temp)
+    {
+        string itemName = toLowerCase(temp->data.name);
+        if (itemName.find(lowerKey) != string::npos)
+        {
+            cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
+            foundSortedDescending = true;
+        }
+        temp = temp->next;
+    }
+
+    if (!foundSortedDescending)
     {
         cout << "Item not found in the menu." << endl;
     }
@@ -579,8 +599,6 @@ void jumpSearch(Node *head, const string &key)
         cout << "Item not found in the menu." << endl;
     }
 }
-
-
 
 void searchResults(Node *head, const string &itemName, int searchType)
 {
