@@ -973,7 +973,7 @@ void showMenuOptions(Node *&head)
         break;
 
     case 3:
-        showMenuOptions(head);
+        addMenuItem(head);
         break;
 
     case 4:
