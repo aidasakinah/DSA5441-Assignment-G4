@@ -3,7 +3,10 @@
 #include <fstream>
 #include <cstdlib>
 #include <string>
-#include <algorithm>
+#include <algorithm> //this is used for unsorted data. All sorting algorithms DO NOT use this library. Checked by Aida.
+#include <vector>
+#include <sstream>
+#include <conio.h>
 #include <cmath>
 #include <cctype>
 
@@ -87,18 +90,17 @@ void deleteMenuItem(Node *&head, const string &name)
 void countSort(Node *&head, int pos)
 {
     Node *temp = head;
-    Node *nodeList[MAX_ITEM];
-    int count = 0;
+    vector<Node *> nodeList;
 
-    // Store all nodes in an array
+    // Store all nodes in a vector
     while (temp)
     {
-        nodeList[count++] = temp;
+        nodeList.push_back(temp);
         temp = temp->next;
     }
 
-    // Sort the array based on the character at the current position
-    sort(nodeList, nodeList + count, [pos](Node *a, Node *b)
+    // Sort the vector based on the character at the current position
+    sort(nodeList.begin(), nodeList.end(), [pos](Node *a, Node *b)
          {
         if (pos >= a->data.name.length() && pos >= b->data.name.length()) {
             return false;
@@ -110,21 +112,21 @@ void countSort(Node *&head, int pos)
             return a->data.name[pos] < b->data.name[pos];
         } });
 
-    // Rebuild the linked list from the sorted array
+    // Rebuild the linked list from the sorted vector
     Node *newHead = nullptr;
     Node *tail = nullptr;
-    for (int i = 0; i < count; i++)
+    for (Node *node : nodeList)
     {
-        nodeList[i]->next = nullptr;
+        node->next = nullptr;
         if (newHead == nullptr)
         {
-            newHead = nodeList[i];
+            newHead = node;
         }
         else
         {
-            tail->next = nodeList[i];
+            tail->next = node;
         }
-        tail = nodeList[i];
+        tail = node;
     }
 
     head = newHead;
@@ -149,18 +151,17 @@ void radixSort(Node *&head)
 void countSortDescending(Node *&head, int pos)
 {
     Node *temp = head;
-    Node *nodeList[MAX_ITEM];
-    int count = 0;
+    vector<Node *> nodeList;
 
-    // Store all nodes in an array
+    // Store all nodes in a vector
     while (temp)
     {
-        nodeList[count++] = temp;
+        nodeList.push_back(temp);
         temp = temp->next;
     }
 
-    // Sort the array based on the character at the current position in descending order
-    sort(nodeList, nodeList + count, [pos](Node *a, Node *b)
+    // Sort the vector based on the character at the current position in descending order
+    sort(nodeList.begin(), nodeList.end(), [pos](Node *a, Node *b)
          {
         if (pos >= a->data.name.length() && pos >= b->data.name.length()) {
             return false;
@@ -175,21 +176,21 @@ void countSortDescending(Node *&head, int pos)
             return a->data.name[pos] > b->data.name[pos];
         } });
 
-    // Rebuild the linked list from the sorted array
+    // Rebuild the linked list from the sorted vector
     Node *newHead = nullptr;
     Node *tail = nullptr;
-    for (int i = 0; i < count; i++)
+    for (Node *node : nodeList)
     {
-        nodeList[i]->next = nullptr;
+        node->next = nullptr;
         if (newHead == nullptr)
         {
-            newHead = nodeList[i];
+            newHead = node;
         }
         else
         {
-            tail->next = nodeList[i];
+            tail->next = node;
         }
-        tail = nodeList[i];
+        tail = node;
     }
 
     head = newHead;
@@ -212,26 +213,20 @@ void radixSortDescending(Node *&head)
 }
 
 // Custom sorting algorithm: Find minimum and swap
-void customSort(Node *&head)
-{
-    if (!head)
-        return;
+void customSort(Node*& head) {
+    if (!head) return;
 
-    Node *current = head;
-    while (current)
-    {
-        Node *minNode = current;
-        Node *temp = current->next;
-        while (temp)
-        {
-            if (temp->data.price < minNode->data.price)
-            {
+    Node* current = head;
+    while (current) {
+        Node* minNode = current;
+        Node* temp = current->next;
+        while (temp) {
+            if (temp->data.price < minNode->data.price) {
                 minNode = temp;
             }
             temp = temp->next;
         }
-        if (minNode != current)
-        {
+        if (minNode != current) {
             swap(current->data, minNode->data);
         }
         current = current->next;
@@ -239,60 +234,50 @@ void customSort(Node *&head)
 }
 
 // Bucket sort in ascending order
-void bucketSortAscending(Node *&head)
-{
-    if (!head)
-    {
+void bucketSortAscending(Node*& head) {
+    if (!head) {
         cout << "The menu is empty. Nothing to sort." << endl;
         return;
     }
 
     // Find the maximum price in the menu
     float maxPrice = head->data.price;
-    Node *temp = head->next;
-    while (temp)
-    {
+    Node* temp = head->next;
+    while (temp) {
         maxPrice = max(maxPrice, temp->data.price);
         temp = temp->next;
     }
 
     // Create buckets based on the maximum price
     int numBuckets = static_cast<int>(ceil(sqrt(maxPrice)));
-    Node *buckets[numBuckets] = {nullptr};
+    Node* buckets[numBuckets] = {nullptr};
 
     // Distribute the menu items into the buckets based on their price
     temp = head;
-    while (temp)
-    {
+    while (temp) {
         int bucketIndex = static_cast<int>(floor(temp->data.price / maxPrice * (numBuckets - 1)));
         // Add item to the front of the bucket's linked list
-        Node *newNode = new Node(temp->data);
+        Node* newNode = new Node(temp->data);
         newNode->next = buckets[bucketIndex];
         buckets[bucketIndex] = newNode;
         temp = temp->next;
     }
 
     // Sort each bucket individually using custom sort
-    for (int i = 0; i < numBuckets; ++i)
-    {
+    for (int i = 0; i < numBuckets; ++i) {
         customSort(buckets[i]);
     }
 
     // Rebuild the linked list from the sorted buckets
-    Node *newHead = nullptr;
-    Node *tail = nullptr;
-    for (int i = 0; i < numBuckets; ++i)
-    {
-        Node *current = buckets[i];
-        while (current)
-        {
-            if (!newHead)
-            {
+    Node* newHead = nullptr;
+    Node* tail = nullptr;
+    for (int i = 0; i < numBuckets; ++i) {
+        Node* current = buckets[i];
+        while (current) {
+            if (!newHead) {
                 newHead = current;
                 tail = current;
-            }
-            else
-            {
+            } else {
                 tail->next = current;
                 tail = current;
             }
@@ -306,21 +291,19 @@ void bucketSortAscending(Node *&head)
 
     // Update the head pointer
     head = newHead;
+
+    cout << "Menu sorted using bucket sort." << endl;
 }
 
 // Custom sorting algorithm: Find maximum and swap
-void customSortDescending(Node *&head)
-{
-    if (!head)
-        return;
+void customSortDescending(Node*& head) {
+    if (!head) return;
 
-    Node *current = head;
-    while (current)
-    {
-        Node *maxNode = current;
-        Node *temp = current->next;
-        while (temp)
-        {
+    Node* current = head;
+    while (current) {
+        Node* maxNode = current;
+        Node* temp = current->next;
+        while (temp) {
             if (temp->data.price > maxNode->data.price)
                 maxNode = temp;
             temp = temp->next;
@@ -332,34 +315,30 @@ void customSortDescending(Node *&head)
 }
 
 // Bucket sort in descending order
-void bucketSortDescending(Node *&head)
-{
-    if (!head)
-    {
+void bucketSortDescending(Node*& head) {
+    if (!head) {
         cout << "The menu is empty. Nothing to sort." << endl;
         return;
     }
 
     // Find the maximum price in the menu
     float maxPrice = head->data.price;
-    Node *temp = head->next;
-    while (temp)
-    {
+    Node* temp = head->next;
+    while (temp) {
         maxPrice = max(maxPrice, temp->data.price);
         temp = temp->next;
     }
 
     // Create array of linked lists for buckets
     int numBuckets = static_cast<int>(ceil(sqrt(maxPrice)));
-    Node *buckets[numBuckets] = {nullptr};
+    Node* buckets[numBuckets] = {nullptr};
 
     // Distribute the menu items into the buckets based on their price
     temp = head;
-    while (temp)
-    {
+    while (temp) {
         int bucketIndex = static_cast<int>(floor(temp->data.price / maxPrice * (numBuckets - 1)));
         // Add item to the front of the bucket's linked list
-        Node *newNode = new Node;
+        Node * newNode = new Node;
         newNode->data = temp->data;
         newNode->next = buckets[bucketIndex];
         buckets[bucketIndex] = newNode;
@@ -367,26 +346,20 @@ void bucketSortDescending(Node *&head)
     }
 
     // Sort each bucket individually using custom sort in descending order
-    for (int i = 0; i < numBuckets; ++i)
-    {
+    for (int i = 0; i < numBuckets; ++i) {
         customSortDescending(buckets[i]);
     }
 
     // Rebuild the linked list from the sorted buckets in descending order
-    Node *newHead = nullptr;
-    Node *tail = nullptr;
-    for (int i = numBuckets - 1; i >= 0; --i)
-    {
-        Node *current = buckets[i];
-        while (current)
-        {
-            if (!newHead)
-            {
+    Node* newHead = nullptr;
+    Node* tail = nullptr;
+    for (int i = numBuckets - 1; i >= 0; --i) {
+        Node* current = buckets[i];
+        while (current) {
+            if (!newHead) {
                 newHead = current;
                 tail = current;
-            }
-            else
-            {
+            } else {
                 tail->next = current;
                 tail = current;
             }
@@ -399,6 +372,8 @@ void bucketSortDescending(Node *&head)
 
     // Update the head pointer
     head = newHead;
+
+    cout << "Menu sorted using bucket sort in descending order." << endl;
 }
 
 void printMenu(Node *head)
@@ -409,9 +384,9 @@ void printMenu(Node *head)
         return;
     }
 
-    cout << string(65, '-') << endl;
+    cout << "----------------------------------------" << endl;
     cout << setw(30) << "Menu" << endl;
-    cout << string(65, '-') << endl;
+    cout << "----------------------------------------" << endl;
     cout << left << setw(30) << "Name" << setw(15) << "Price (RM)" << setw(20) << "Category" << endl;
     cout << string(65, '-') << endl;
 
@@ -433,125 +408,148 @@ string toLowerCase(const string &str)
     return lowerStr;
 }
 
-// Ternary Search
-void ternarySearch(Node *head, const string &key)
+//Ternary search
+bool ternarySearch(int l, int r, string key, MenuItem* items, vector<int>& indices)
 {
-    if (!head)
-        return;
-
-    // Convert key to lowercase
-    string lowerKey = toLowerCase(key);
-
-    // Create a dummy array to hold the nodes
-    Node *dummy[MAX_ITEM];
-    int count = 0;
-
-    Node *temp = head;
-    while (temp)
+    key = toLowerCase(key);
+    if (r < l)
     {
-        dummy[count++] = temp;
-        temp = temp->next;
+        return false;
     }
-
-    // Display unsorted search results
-    cout << "\nUnsorted Search Results:" << endl;
-    bool foundUnsorted = false;
-    for (int i = 0; i < count; ++i)
+    int mid1 = l + (r - l) / 3;
+    int mid2 = r - (r - l) / 3;
+    // Check if the mid points contain the key
+    if (toLowerCase(items[mid1].name).find(key) != string::npos)
     {
-        string itemName = toLowerCase(dummy[i]->data.name);
-        if (itemName.find(lowerKey) != string::npos)
-        {
-            cout << dummy[i]->data.name << " - RM" << fixed << setprecision(2) << dummy[i]->data.price << " (" << dummy[i]->data.category << ")" << endl;
-            foundUnsorted = true;
-        }
+        if (find(indices.begin(), indices.end(), mid1) == indices.end())
+            indices.push_back(mid1);
     }
-
-    // Sort the menu items in ascending order using bucket sort
-    bucketSortAscending(head);
-
-    // Display sorted search results
-    cout << "\nSorted Search Results by Price:" << endl;
-    temp = head;
-    bool found = false;
-    while (temp)
+    if (toLowerCase(items[mid2].name).find(key) != string::npos)
     {
-        string itemName = toLowerCase(temp->data.name);
-        if (itemName.find(lowerKey) != string::npos)
-        {
-            cout << temp->data.name << " - RM" << fixed << setprecision(2) << temp->data.price << " (" << temp->data.category << ")" << endl;
-            found = true;
-        }
-        temp = temp->next;
+        if (find(indices.begin(), indices.end(), mid2) == indices.end())
+            indices.push_back(mid2);
     }
-
-    if (!found)
-    {
-        cout << "Item not found in the menu." << endl;
-    }
+    // Recursively search in all three parts of the array
+    bool leftSearch = ternarySearch(l, mid1 - 1, key, items, indices);
+    bool middleSearch = ternarySearch(mid1 + 1, mid2 - 1, key, items, indices);
+    bool rightSearch = ternarySearch(mid2 + 1, r, key, items, indices);
+    return leftSearch || middleSearch || rightSearch || !indices.empty();
 }
 
 // Jump Search
-void jumpSearch(Node *head, const string &key)
+int *jumpSearch(MenuItem *items, int n, const string &key, int &resultCount)
 {
-    if (!head)
-        return;
+    int *results = new int[MAX_ITEM];
+    resultCount = 0;
 
-    // Convert key to lowercase
+    int step = sqrt(n);
+    int prev = 0;
     string lowerKey = toLowerCase(key);
 
-    // Create a dummy array to hold the nodes
-    Node *dummy[MAX_ITEM];
-    int count = 0;
-
-    Node *temp = head;
-    while (temp)
+    while (prev < n)
     {
-        dummy[count++] = temp;
-        temp = temp->next;
-    }
-
-    // Sort the array alphabetically
-    sort(dummy, dummy + count, [](Node *a, Node *b)
-         { return a->data.name < b->data.name; });
-
-    int step = sqrt(count);
-    int prev = 0;
-
-    // Perform jump search on the array
-    while (prev < count)
-    {
-        for (int i = prev; i < min(step, count); i++)
+        // Check within the current block
+        for (int i = prev; i < min(step, n); i++)
         {
-            if (toLowerCase(dummy[i]->data.name).find(lowerKey) != string::npos)
+            if (toLowerCase(items[i].name).find(lowerKey) != string::npos)
             {
-                cout << dummy[i]->data.name << " - RM" << fixed << setprecision(2) << dummy[i]->data.price << " (" << dummy[i]->data.category << ")" << endl;
+                results[resultCount++] = i;
             }
         }
         prev = step;
-        step += sqrt(count);
+        step += sqrt(n);
     }
+
+    return results;
 }
 
-void searchResults(Node *head, const string &itemName, int searchType)
+void searchMenu(Node *head, const string &itemName, int searchType)
 {
+    MenuItem items[MAX_ITEM];
+    int itemCount = 0;
+    Node *temp = head;
+    while (temp)
+    {
+        items[itemCount++] = temp->data;
+        temp = temp->next;
+    }
+    sort(items, items + itemCount, [](MenuItem a, MenuItem b)
+    { return a.name < b.name; });
+    vector<int> indices;
+    bool found = false;
+
     if (searchType == 1)
     {
-        cout << "----------------------------------------" << endl;
-        cout << "         Ternary Search Results         " << endl;
-        cout << "----------------------------------------" << endl;
-        ternarySearch(head, itemName);
+        found = ternarySearch(0, itemCount - 1, itemName, items, indices);
+
+        // Create a new linked list from the indices vector
+        Node *newHead = nullptr;
+        Node *tail = nullptr;
+        for (int index : indices)
+        {
+            Node *newNode = new Node(items[index]);
+            if (newHead == nullptr)
+            {
+                newHead = newNode;
+                tail = newNode;
+            }
+            else
+            {
+                tail->next = newNode;
+                tail = newNode;
+            }
+        }
+
+        // Sort the new linked list using radixSort
+        radixSort(newHead);
+
+        // Print the sorted results
+        cout << "Items found: " << endl;
+        Node *curr = newHead;
+        while (curr)
+        {
+            cout << curr->data.name << " - RM" << fixed << setprecision(2) << curr->data.price << " (" << curr->data.category << ")" << endl;
+            curr = curr->next;
+        }
+
+        // Clean up the new linked list
+        curr = newHead;
+        while (curr)
+        {
+            Node *temp = curr;
+            curr = curr->next;
+            delete temp;
+        }
     }
     else if (searchType == 2)
     {
-        cout << "----------------------------------------" << endl;
-        cout << "           Jump Search Results          " << endl;
-        cout << "----------------------------------------" << endl;
-        jumpSearch(head, itemName);
+        int *results = jumpSearch(items, itemCount, itemName, itemCount);
+        for (int i = 0; i < itemCount; ++i)
+        {
+            if (results[i] != -1)
+            {
+                indices.push_back(results[i]);
+            }
+        }
+        found = !indices.empty();
+        delete[] results;
+
+        if (found)
+        {
+            cout << "Items found: " << endl;
+            for (int index : indices)
+            {
+                cout << items[index].name << " - RM" << fixed << setprecision(2) << items[index].price << " (" << items[index].category << ")" << endl;
+            }
+        }
+        else
+        {
+            cout << "Item not found in the menu." << endl;
+        }
     }
 }
 
 void goBackToMenu(Node *&head);
-void showMenuOptions(Node *&head);
 
 void addMenuItem(Node *&head)
 {
@@ -596,8 +594,6 @@ void addMenuItem(Node *&head)
     }
 }
 
-// menu sorting algorithm
-// finished
 void algorithmSortMenu(Node *&head)
 {
     int sortalgo, radixChoice, bucketChoice;
@@ -608,8 +604,8 @@ void algorithmSortMenu(Node *&head)
     cout << "1. Radix Sort" << endl;
     cout << "2. Bucket Sort" << endl;
     cout << "3. View unsorted data" << endl;
-    cout << "4. Return to homepage" << endl;
-    cout << "\nEnter your choice: ";
+    cout << "4. Return to previous page" << endl;
+    cout << "Enter your choice: ";
     cin >> sortalgo;
 
     if (sortalgo == 1)
@@ -621,7 +617,7 @@ void algorithmSortMenu(Node *&head)
         cout << "1. Alphabetically (A-Z)" << endl;
         cout << "2. Alphabetically (Z-A)" << endl;
         cout << "3. Return to previous page" << endl;
-        cout << "\nEnter your choice: ";
+        cout << "Enter your choice: ";
         cin >> radixChoice;
 
         if (radixChoice == 1)
@@ -630,7 +626,6 @@ void algorithmSortMenu(Node *&head)
             radixSort(head);
             printMenu(head);
             goBackToMenu(head);
-            algorithmSortMenu(head);
         }
         else if (radixChoice == 2)
         {
@@ -653,89 +648,32 @@ void algorithmSortMenu(Node *&head)
         cout << "1. Price Range (Lowest-Highest)" << endl;
         cout << "2. Price Range (Highest to Lowest)" << endl;
         cout << "3. Return to previous page" << endl;
-        cout << "\nEnter your choice: ";
-        cin >> bucketChoice;
+        cout << "Enter your choice: ";
+        cin >> bucketChoice;;
 
-        if (bucketChoice == 1)
+        if (bucketChoice==1)
         {
             system("cls");
             bucketSortAscending(head);
             printMenu(head);
             goBackToMenu(head);
         }
-        else if (bucketChoice == 2)
+        else if (bucketChoice==2)
         {
             system("cls");
             bucketSortDescending(head);
             printMenu(head);
             goBackToMenu(head);
         }
-        else if (bucketChoice == 3)
+        else if (bucketChoice==3)
         {
             algorithmSortMenu(head);
         }
+        
     }
-    else if (sortalgo == 3)
-    {
-        system("cls");
-        printMenu(head);
-        goBackToMenu(head);
-    }
-    else if (sortalgo == 4)
-    {
-        showMenuOptions(head);
-    }
-    else
-    {
-        cout << "Invalid choice. Please select again." << endl;
-        algorithmSortMenu(head);
-    }
+    
 }
 
-//menu search algorithm
-void algorithmSearchMenu(Node *&head)
-{
-    int searchType;
-    system("cls");
-    cout << "----------------------------------------" << endl;
-    cout << "            Search Algorithms           " << endl;
-    cout << "----------------------------------------" << endl;
-    cout << "1. Ternary Search" << endl;
-    cout << "2. Jump Search" << endl;
-    cout << "3. Return to homepage" << endl;
-    cout << "\nEnter your choice: ";
-    cin >> searchType;
-
-    if (searchType == 1)
-    {
-        system("cls");
-        cout << "Enter the name of the item to search: ";
-        string itemName;
-        cin.ignore();
-        getline(cin, itemName);
-        searchResults(head, itemName, searchType);
-        goBackToMenu(head);
-    }
-    else if (searchType == 2)
-    {
-        system("cls");
-        cout << "Enter the name of the item to search: ";
-        string itemName;
-        cin.ignore();
-        getline(cin, itemName);
-        searchResults(head, itemName, searchType);
-        goBackToMenu(head);
-    }
-    else if (searchType == 3)
-    {
-        showMenuOptions(head);
-    }
-    else
-    {
-        cout << "Invalid choice. Please select again." << endl;
-        algorithmSearchMenu(head);
-    }
-}
 class Restaurant
 {
 private:
@@ -785,19 +723,18 @@ public:
         else if (displayChoice == 2)
         {
             // Sort from highest price to lowest price
-            Node *nodeList[MAX_ITEM];
-            int count = 0;
+            vector<Node *> nodeList;
             temp = head;
             while (temp)
             {
-                nodeList[count++] = temp;
+                nodeList.push_back(temp);
                 temp = temp->next;
             }
-            sort(nodeList, nodeList + count, [](Node *a, Node *b)
+            sort(nodeList.begin(), nodeList.end(), [](Node *a, Node *b)
                  { return a->data.price > b->data.price; });
-            for (int i = 0; i < count; i++)
+            for (Node *node : nodeList)
             {
-                cout << itemNumber << ") " << nodeList[i]->data.name << " RM" << fixed << setprecision(2) << nodeList[i]->data.price << endl;
+                cout << itemNumber << ") " << node->data.name << " RM" << fixed << setprecision(2) << node->data.price << endl;
                 itemNumber++;
             }
         }
@@ -832,7 +769,8 @@ void showMenuOptions(Node *&head)
     cout << "1. Unsorted Menu" << endl;
     cout << "2. Sorted Menu" << endl;
     cout << "3. Add Menu" << endl;
-    cout << "4. EXIT" << endl;
+    cout << "4. Delete" << endl;
+    cout << "5. EXIT" << endl;
     cout << "\nEnter your choice :";
     cin >> choice;
     cin.ignore();
@@ -883,46 +821,145 @@ void showMenuOptions(Node *&head)
         if (sortMenuChoice == 1) // this is where sorted data is
         {
             algorithmSortMenu(head);
+
+            // if (sortalgo == 1)
+            // {
+            //     system("cls");
+            //     cout << "----------------------------------------" << endl;
+            //     cout << "               Radix Sort               " << endl;
+            //     cout << "----------------------------------------" << endl;
+            //     cout << "1. Alphabetically (A-Z)" << endl;
+            //     cout << "2. Alphabetically (Z-A)" << endl;
+            //     cout << "3. Return to previous page" << endl;
+            //     cin >> radixChoice;
+
+            //     if (radixChoice == 1)
+            //     {
+            //         system("cls");
+            //         radixSort(head);
+            //         printMenu(head);
+            //         goBackToMenu(head);
+            //     }
+            //     else if (radixChoice == 2)
+            //     {
+            //         system("cls");
+            //         radixSortDescending(head);
+            //         printMenu(head);
+            //         goBackToMenu(head);
+            //     }
+            //     else if (radixChoice == 3)
+            //     {
+            //         algorithmSortMenu(head);
+            //     }
+            // }
+            // else if (rjChoice == 2)
+            // {
+            //     int searchType;
+            //     system("cls");
+            //     cout << "Search Options:" << endl;
+            //     cout << "1. Ternary Search" << endl;
+            //     cout << "2. Jump Search" << endl;
+            //     cout << "Enter your choice: ";
+            //     cin >> searchType;
+
+            //     system("cls");
+            //     cout << "Enter the name of the item to search: ";
+            //     cin.ignore();
+            //     getline(cin, itemName);
+            //     searchMenu(head, itemName, searchType);
+            //     goBackToMenu(head);
+            // }
+            //     else if (rjChoice == 3)
+            //     {
+            //         system("cls");
+            //         Restaurant R;
+            //         R.readFile(head, 0);
+            //         printMenu(head);
+            //         goBackToMenu(head);
+            //     }
+
+            //     radixSort(head);
+            //     printMenu(head);
+            //     goBackToMenu(head);
+            // }
+            // else if (sortMenuChoice == 2)
+            // {
+            //     system("cls");
+            //     radixSortDescending(head);
+            //     printMenu(head);
+            //     goBackToMenu(head);
+            // }
+            // else if (sortChoice == 4)
+            // {
+            //     int searchType;
+            //     system("cls");
+            //     cout << "Search Options:" << endl;
+            //     cout << "1. Ternary Search" << endl;
+            //     cout << "2. Jump Search" << endl;
+            //     cout << "Enter your choice: ";
+            //     cin >> searchType;
+
+            //     system("cls");
+            //     cout << "Enter the name of the item to search: ";
+            //     cin.ignore();
+            //     getline(cin, itemName);
+            //     searchMenu(head, itemName, searchType);
+            //     goBackToMenu(head);
+            // }
         }
         else if (sortMenuChoice == 2)
         {
-            algorithmSearchMenu(head);
+            int searchType;
+            system("cls");
+            cout << "Search Options:" << endl;
+            cout << "1. Ternary Search" << endl;
+            cout << "2. Jump Search" << endl;
+            cout << "Enter your choice: ";
+            cin >> searchType;
+
+            system("cls");
+            cout << "Enter the name of the item to search: ";
+            cin.ignore();
+            getline(cin, itemName);
+            searchMenu(head, itemName, searchType);
+            goBackToMenu(head);
         }
         break;
 
     case 3:
-        showMenuOptions(head);
+        addMenuItem(head);
         break;
 
     case 4:
+        fflush(stdin);
+        cout << "Enter the name of the item to delete: ";
+        getline(cin, itemToDelete);
+        deleteMenuItem(head, itemToDelete);
+        goBackToMenu(head); // This line is executed even if the item is not found
+        break;
+
+    case 5:
         cout << "Thank you for visiting Restaurant Fusion Fare Delights." << endl;
         exit(0);
         break;
-
     default:
+
         system("cls");
         cout << "Invalid choice. Please select again." << endl;
         showMenuOptions(head);
         break;
+
     } // end of switch
 } // end function
 
 void goBackToMenu(Node *&head)
 {
-    cout << "\nEnter 1 to go back to the homepage, 2 to Sorting Menu or 3 to Search Menu: ";
+    cout << "\nEnter 1 to go back to the homepage: ";
     int backChoice;
     cin >> backChoice;
     if (backChoice == 1)
     {
         showMenuOptions(head);
-    }
-    else if (backChoice == 2)
-    {
-        algorithmSortMenu(head);
-    }
-    else if (backChoice == 3)
-    {
-        algorithmSearchMenu(head);
     }
     else
     {
